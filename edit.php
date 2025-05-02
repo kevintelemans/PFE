@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-
+$categories = getAllCategories();
 if (!isset($_GET['id'])) {
     header('location: index.php');
     exit;
@@ -66,10 +66,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="number" id="publication_year" name="publication_year" value="<?= htmlspecialchars($book['publication_year']) ?>" min="1000" max="<?= date('Y') + 5 ?>" required>
         </div>
         <div class="form-group">
-            <label for="genre">Genre*</label>
-            <input type="text" id="genre" name="genre" value="<?= htmlspecialchars($book['genre']) ?>" required>
-            <small>Ex: roman, science-fiction</small>
-        </div>
+    <label for="category_id">Catégorie*</label>
+    <select id="category_id" name="category_id" required>
+        <option value="">-- Choisir une catégorie --</option>
+        <?php foreach ($categories as $category): ?>
+            <option value="<?= $category['id'] ?>"
+                <?= $category['id'] == ($book['category_id'] ?? '') ? 'selected' : '' ?>>
+                <?= htmlspecialchars($category['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
         <button type="submit" class="btn">Mettre à jour</button>
     </form>
 </body>
