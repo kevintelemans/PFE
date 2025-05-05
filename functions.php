@@ -21,25 +21,37 @@ function getBookById($id) {
 }
 function addBook($data) {
     global $pdo;
-    $stmt = $pdo->prepare("INSERT INTO books (title, author, publication_year, category_id) VALUES (?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO books (title, author, publication_year, category_id,image) VALUES (?, ?, ?, ?, ?)");
     return $stmt->execute([
         $data['title'],
         $data['author'],
         $data['publication_year'],
         !empty($data['category_id']) ? $data['category_id'] : null,
+        $data['image']??null,
     ]);
 }
-function updateBook($id, $data) {
+function updatebook($id, $data) {
     global $pdo;
-    $stmt = $pdo->prepare("UPDATE books SET title = ?, author = ?, publication_year = ?, category_id = ? WHERE id = ?");
-    return $stmt->execute([
-        $data['title'],
-        $data['author'],
-        $data['publication_year'],
-        $data['category_id'],
-    $id
-]);
+
+    $sql = "UPDATE books SET title = :title, author = :author, publication_year = :year, category_id = :category_id";
+    $params = [
+        ':title' => $data['title'],
+        ':author' => $data['author'],
+        ':year' => $data['publication_year'],
+        ':category_id' => $data['category_id'],
+        ':id' => $id
+    ];
+
+    if (!empty($data['image'])) {
+        $sql .= ", image = :image";
+        $params[':image'] = $data['image'];
+    }
+
+    $sql .= " WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    return $stmt->execute($params);
 }
+
 
 
 function deleteBook($id) {

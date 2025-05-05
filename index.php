@@ -38,6 +38,10 @@ if (isset($_GET['category'])) {
             display: inline;
             margin-right: 10px;
         }
+        img.book-cover {
+            height: 60px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +80,7 @@ if (isset($_GET['category'])) {
         <table>
             <thead>
             <tr>
+                <th>Image</th>
                 <th>Titre</th>
                 <th>Auteur</th>
                 <th>Année</th>
@@ -86,6 +91,13 @@ if (isset($_GET['category'])) {
             <tbody>
             <?php foreach ($books as $book): ?>
                 <tr>
+                    <td>
+                        <?php if (!empty($book['image'])): ?>
+                            <img src="uploads/<?= htmlspecialchars($book['image']) ?>" alt="Couverture" class="book-cover">
+                        <?php else: ?>
+                            <em>Aucune image</em>
+                        <?php endif; ?>
+                    </td>
                     <td><?= htmlspecialchars($book['title']) ?></td>
                     <td><?= htmlspecialchars($book['author']) ?></td>
                     <td><?= $book['publication_year'] ?></td>
